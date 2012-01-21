@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(ProjectDir)Build.Profile.$(BuildProfile).xml"/>
+  
+  <PropertyGroup>
+    <BuildOutputPath>$(MSBuildProjectDirectory)\..\bin\$(BuildProfile)</BuildOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <UIProject Include="$(MSBuildProjectDirectory)\Greeter.Console\Greeter.Console.csproj" />
+  </ItemGroup>
+
+  <Target Name="Build" DependsOnTargets="Clean">
+    <MSBuild Projects="@(UIProject)" Targets="Clean;Build"/>
+  </Target>
+
+  <Target Name="Clean">
+    <RemoveDir Directories="$(MSBuildProjectDirectory)\..\bin"/>
+  </Target>
+  
+  <Target Name="BuildDependencies">
+    <Message Text="Building %(Module.FullPath) to OutDir=$(BuildOutputPath)\" Importance="high"/>
+    <MSBuild Projects="@(Module)" Targets="Build" Properties="OutDir=$(BuildOutputPath)\"/>
+  </Target>
+</Project>
