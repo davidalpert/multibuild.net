@@ -90,7 +90,10 @@
     <PropertyGroup>
       <MasterBuildScript>$(MSBuildProjectDirectory)\..\Build.xml</MasterBuildScript>
     </PropertyGroup>
+    <ConvertToAbsolutePath Paths="$(OutDir)" Condition="$(BuildOutputPath)==''">
+      <Output TaskParameter="AbsolutePaths" PropertyName="AbsoluteBuildOutputPath"/>
+    </ConvertToAbsolutePath>
     <Message Text="Building: $(MasterBuildScript)" />
-    <MSBuild Projects="$(MasterBuildScript)" Targets="BuildDependencies" Properties="ProjectDir=$(MSBuildProjectDirectory)\..\;BuildProfile=Console" />
+    <MSBuild Projects="$(MasterBuildScript)" Targets="BuildDependencies" Properties="ProjectDir=$(MSBuildProjectDirectory)\..\;BuildProfile=Console;BuildOutputPath=$(AbsoluteBuildOutputPath)" />
   </Target>
 </Project>
