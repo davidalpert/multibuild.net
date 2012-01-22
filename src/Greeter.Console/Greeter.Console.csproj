@@ -87,15 +87,27 @@
   </Target>
   -->
   <Target Name="AfterBuild">
+    
+    <!-- Define the build profile to use when building this project's dependent modules -->
     <PropertyGroup>
-      <MasterBuildScript>$(MSBuildProjectDirectory)\..\Build.xml</MasterBuildScript>
+      <BuildProfile>Console</BuildProfile>
     </PropertyGroup>
     
+    <!-- Convert this project's OutDir to an absolute path in case it is defined in this project file as "bin\Debug" -->
     <ConvertToAbsolutePath Paths="$(OutDir)">
       <Output TaskParameter="AbsolutePaths" PropertyName="AbsoluteOutDir"/>
     </ConvertToAbsolutePath>
     
+    <PropertyGroup>
+      <MasterBuildScriptFolder>$(MSBuildProjectDirectory)\..\</MasterBuildScriptFolder>
+      <BuildDependenciesProperties>
+          ProjectDir=$(MasterBuildScriptFolder);
+          BuildProfile=$(BuildProfile);
+          BuildOutputPath=$(AbsoluteOutDir)
+      </BuildDependenciesProperties>
+    </PropertyGroup>
+   
     <Message Text="Building: $(MasterBuildScript)" />
-    <MSBuild Projects="$(MasterBuildScript)" Targets="BuildDependencies" Properties="ProjectDir=$(MSBuildProjectDirectory)\..\;BuildProfile=Console;BuildOutputPath=$(AbsoluteOutDir)" />
+    <MSBuild Projects="$(MasterBuildScriptFolder)Build.xml" Targets="BuildDependencies" Properties="$(BuildDependenciesProperties)"/>
   </Target>
 </Project>

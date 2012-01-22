@@ -1,21 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(ProjectDir)Build.Profile.$(BuildProfile).xml" Condition="$(BuildProfile) != ''"/>
+<Project ToolsVersion="4.0" DefaultTargets="CIBuild" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   
+  <!-- A list of all the UIProjects to build -->
   <ItemGroup>
     <UIProject Include="$(MSBuildProjectDirectory)\Greeter.Console\Greeter.Console.csproj">
       <BuildProfile>Console</BuildProfile>
     </UIProject>
   </ItemGroup>
 
-  <Target Name="Build" DependsOnTargets="Clean">
+  <!-- The CI build target that kicks off all the UIProjects to build to the ~/bin/{Profile}/ folder -->
+  <Target Name="CIBuild" DependsOnTargets="Clean">
     <MSBuild Projects="@(UIProject)" Targets="Clean;Build" Properties="OutDir=$(MSBuildProjectDirectory)\..\bin\%(BuildProfile)\"/>
   </Target>
 
+  <!-- The primary clean target that tries to removes the ~/bin/ folder -->
   <Target Name="Clean">
     <RemoveDir Directories="$(MSBuildProjectDirectory)\..\bin" ContinueOnError="true"/>
   </Target>
   
+  <!-- This includes the BuildProfile-specific dependency lists when invoked with a build profile -->
+  <Import Project="$(ProjectDir)Build.Profile.$(BuildProfile).xml" Condition="$(BuildProfile) != ''"/>
+ 
+  <!-- This target is called by the UIProject AfterBuild targets to build the dependencies to the proper OutDir -->
   <Target Name="BuildDependencies">
     <Message Text="Building %(Module.FullPath) to OutDir=$(BuildOutputPath)\" Importance="high"/>
     <MSBuild Projects="@(Module)" Targets="Build" Properties="OutDir=$(BuildOutputPath)\"/>
