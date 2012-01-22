@@ -23,7 +23,7 @@
  
   <!-- This target is called by the UIProject AfterBuild targets to build the dependencies to the proper OutDir -->
   <Target Name="BuildDependencies">
-    <Message Text="Building %(Module.FullPath) to OutDir=$(BuildOutputPath)\" Importance="high"/>
-    <MSBuild Projects="@(Module)" Targets="Build" Properties="OutDir=$(BuildOutputPath)\"/>
+    <Message Text="Building %(Module.FullPath) to OutDir=$(BuildOutputPath)\Modules\" Importance="high"/>
+    <MSBuild Projects="@(Module)" Targets="Build" Properties="OutDir=$(BuildOutputPath)\Modules\"/>
   </Target>
 </Project>
