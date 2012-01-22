@@ -91,6 +91,6 @@
       <MasterBuildScript>$(MSBuildProjectDirectory)\..\Build.xml</MasterBuildScript>
     </PropertyGroup>
     <Message Text="Building: $(MasterBuildScript)" />
-    <MSBuild Projects="$(MasterBuildScript)" Targets="BuildDependencies" Properties="BuildProfile=Console" />
+    <MSBuild Projects="$(MasterBuildScript)" Targets="BuildDependencies" Properties="ProjectDir=$(MSBuildProjectDirectory)\..\;BuildProfile=Console" />
   </Target>
 </Project>
