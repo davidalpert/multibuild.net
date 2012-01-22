@@ -1,21 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(ProjectDir)Build.Profile.$(BuildProfile).xml"/>
+  <Import Project="$(ProjectDir)Build.Profile.$(BuildProfile).xml" Condition="$(BuildProfile) != ''"/>
   
-  <PropertyGroup>
-    <BuildOutputPath>$(MSBuildProjectDirectory)\..\bin\$(BuildProfile)</BuildOutputPath>
-  </PropertyGroup>
-
   <ItemGroup>
-    <UIProject Include="$(MSBuildProjectDirectory)\Greeter.Console\Greeter.Console.csproj" />
+    <UIProject Include="$(MSBuildProjectDirectory)\Greeter.Console\Greeter.Console.csproj">
+      <BuildProfile>Console</BuildProfile>
+    </UIProject>
   </ItemGroup>
 
   <Target Name="Build" DependsOnTargets="Clean">
-    <MSBuild Projects="@(UIProject)" Targets="Clean;Build"/>
+    <MSBuild Projects="@(UIProject)" Targets="Clean;Build" Properties="OutDir=$(MSBuildProjectDirectory)\..\bin\%(BuildProfile)\"/>
   </Target>
 
   <Target Name="Clean">
-    <RemoveDir Directories="$(MSBuildProjectDirectory)\..\bin"/>
+    <RemoveDir Directories="$(MSBuildProjectDirectory)\..\bin" ContinueOnError="true"/>
   </Target>
   
   <Target Name="BuildDependencies">
